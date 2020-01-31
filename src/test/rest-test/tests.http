@@ -1,0 +1,5 @@
+GET http://localhost:8080/api/test/user
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqcG96eWN6IiwiaWF0IjoxNTgwMzQ0NjQ1LCJleHAiOjE1ODA0MzEwNDV9.4csBhgdGp1MXQDWGKc4tMPaO2Emv8YTftCIF5l11ov6sQi0IZX5gIVG6kp4qWp0No7bQUv4Qq0ZHkCQ_aqghtg
+
+###
