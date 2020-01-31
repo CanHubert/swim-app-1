@@ -6,11 +6,15 @@ import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
 import com.can.app.swim.swimapp.auth.payloads.responses.JwtResponse;
 import com.can.app.swim.swimapp.auth.payloads.responses.MessageResponse;
 import com.can.app.swim.swimapp.auth.services.UserDetailsImpl;
+import com.can.app.swim.swimapp.entity.EmailTemplate;
 import com.can.app.swim.swimapp.entity.Role;
 import com.can.app.swim.swimapp.entity.User;
 import com.can.app.swim.swimapp.enums.EnumRole;
+import com.can.app.swim.swimapp.helpers.MailProperties;
+import com.can.app.swim.swimapp.repository.EmailTemplateRepository;
 import com.can.app.swim.swimapp.repository.RoleRepository;
 import com.can.app.swim.swimapp.repository.UserRepository;
+import com.can.app.swim.swimapp.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,9 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,10 +42,16 @@ public class AuthController {
 	private RoleRepository roleRepository;
 
 	@Autowired
+	private EmailTemplateRepository emailTemplateRepository;
+
+	@Autowired
 	private PasswordEncoder encoder;
 
 	@Autowired
 	private JWTUtils jwtUtils;
+
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -121,9 +129,23 @@ public class AuthController {
 		}
 
 		user.setRoles(roles);
-		userRepository.save(user);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		EmailTemplate emailTemplate = emailTemplateRepository.findByName("Register");
+		String message;
+		try
+		{
+			MailProperties properties = new MailProperties();
+			properties.add("user", user.getFullName());
+			emailService.sendHtmlVelocityMail(user.getEmail(), emailTemplate, properties);
+			userRepository.save(user);
+			message = "User registered successfully!";
+		}
+		catch (Exception ignored)
+		{
+			message = "User can't be registered!";
+		}
+
+		return ResponseEntity.ok(message);
 	}
 	
 	private void throwExceptionIfRoleIsNull(Role role) {
