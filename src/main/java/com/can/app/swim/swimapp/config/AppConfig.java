@@ -1,14 +1,23 @@
 package com.can.app.swim.swimapp.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
 @Configuration
+@PropertySource("classpath:auth.properties")
 public class AppConfig {
+
+    @Value("${spring.mail.password}")
+    private String password;
+
+    @Value("${spring.mail.username}")
+    private String username;
 
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -16,8 +25,8 @@ public class AppConfig {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("canhubert.aws@gmail.com");
-        mailSender.setPassword("streetworkout2020");
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

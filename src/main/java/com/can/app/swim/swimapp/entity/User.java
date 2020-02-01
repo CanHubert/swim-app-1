@@ -1,5 +1,7 @@
 package com.can.app.swim.swimapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -113,6 +115,7 @@ public class User{
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
