@@ -1,6 +1,8 @@
 package com.can.app.swim.swimapp.entity;
 
+import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -74,6 +76,14 @@ public class User{
 		this.email = email;
 		this.password = password;
 	}
+
+	public User(SignupRequest signupRequest, PasswordEncoder encoder){
+        this.username = signupRequest.getUsername();
+        this.firstName = signupRequest.getFirstName();
+        this.lastName = signupRequest.getLastName();
+        this.email = signupRequest.getEmail();
+        this.password = encoder.encode(signupRequest.getPassword());
+    }
 
     public Long getId() {
         return id;

@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.Optional;
+
 @Repository
 @CrossOrigin(origins = "*", maxAge = 3600)
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     boolean existsByUsername(String username);
 

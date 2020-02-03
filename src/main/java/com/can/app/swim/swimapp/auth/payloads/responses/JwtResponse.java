@@ -1,5 +1,7 @@
 package com.can.app.swim.swimapp.auth.payloads.responses;
 
+import com.can.app.swim.swimapp.auth.services.UserDetailsImpl;
+
 import java.util.List;
 
 public class JwtResponse {
@@ -10,11 +12,11 @@ public class JwtResponse {
 	private String email;
 	private List<String> roles;
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, UserDetailsImpl userDetails, List<String> roles) {
 		this.token = accessToken;
-		this.id = id;
-		this.username = username;
-		this.email = email;
+		this.id = userDetails.getId();
+		this.username = userDetails.getUsername();
+		this.email = userDetails.getEmail();
 		this.roles = roles;
 	}
 

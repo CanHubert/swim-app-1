@@ -10,22 +10,28 @@ import com.can.app.swim.swimapp.entity.EmailTemplate;
 import com.can.app.swim.swimapp.entity.Role;
 import com.can.app.swim.swimapp.entity.User;
 import com.can.app.swim.swimapp.enums.EnumRole;
-import com.can.app.swim.swimapp.helpers.MailProperties;
+import com.can.app.swim.swimapp.helpers.MailValues;
 import com.can.app.swim.swimapp.repository.EmailTemplateRepository;
 import com.can.app.swim.swimapp.repository.RoleRepository;
 import com.can.app.swim.swimapp.repository.UserRepository;
 import com.can.app.swim.swimapp.services.EmailService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -61,17 +67,14 @@ public class AuthController {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
-		
+
+
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
+				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(new JwtResponse(jwt,
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails, roles));
 	}
 
 	@PostMapping("/signup")
@@ -89,16 +92,12 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getUsername(),
-							 signUpRequest.getFirstName(),
-							 signUpRequest.getLastName(),
-							 signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
+		User user = new User(signUpRequest,encoder);
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
-		if (strRoles == null)
+		if (CollectionUtils.isEmpty(strRoles))
 		{
 			Role userRole = roleRepository.findByName(EnumRole.ROLE_USER);
 			throwExceptionIfRoleIsNull(userRole);
@@ -107,36 +106,20 @@ public class AuthController {
 		}
 		else 
 		{
-			strRoles.forEach(role -> 
+			strRoles.forEach(roleName ->
 			{
-				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(EnumRole.ROLE_ADMIN);
-					throwExceptionIfRoleIsNull(adminRole);
-					roles.add(adminRole);
-					break;
-				case "instructor":
-					Role instructorRole = roleRepository.findByName(EnumRole.ROLE_INSTRUCTOR);
-					throwExceptionIfRoleIsNull(instructorRole);
-					roles.add(instructorRole);
-					break;
-				default:
-					Role userRole = roleRepository.findByName(EnumRole.ROLE_USER);
-					throwExceptionIfRoleIsNull(userRole);
-					roles.add(userRole);
-				}
+				Role role = roleRepository.findByName(EnumRole.getByName(roleName));
+				throwExceptionIfRoleIsNull(role);
+				roles.add(role);
 			});
 		}
 
 		user.setRoles(roles);
 
-		EmailTemplate emailTemplate = emailTemplateRepository.findByName("Register");
 		String message;
 		try
 		{
-			MailProperties properties = new MailProperties();
-			properties.add("user", user.getFullName());
-			emailService.sendHtmlVelocityMail(user.getEmail(), emailTemplate, properties);
+			sendWelcomeEmail(user);
 			userRepository.save(user);
 			message = "User registered successfully!";
 		}
@@ -147,11 +130,23 @@ public class AuthController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
+	private void sendWelcomeEmail(User user) throws MessagingException {
+		Optional<EmailTemplate> emailTemplate = emailTemplateRepository.findByName("Register");
+		if(emailTemplate.isPresent())
+		{
+			MailValues mailValues = new MailValues();
+			mailValues.add("user", user.getFullName());
+			emailService.sendHtmlVelocityMail(user.getEmail(), emailTemplate.get(), mailValues);
+		}
+
+	}
+
 	private void throwExceptionIfRoleIsNull(Role role) {
 		if(role == null)
 		{
 			throw new RuntimeException("Error: Role is not found.");
 		}
 	}
+
 }

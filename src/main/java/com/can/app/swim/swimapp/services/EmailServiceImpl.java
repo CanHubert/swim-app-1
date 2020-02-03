@@ -1,7 +1,7 @@
 package com.can.app.swim.swimapp.services;
 
 import com.can.app.swim.swimapp.entity.EmailTemplate;
-import com.can.app.swim.swimapp.helpers.MailProperties;
+import com.can.app.swim.swimapp.helpers.MailValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendHtmlVelocityMail(String to, EmailTemplate template, MailProperties properties) throws MessagingException {
+    public void sendHtmlVelocityMail(String to, EmailTemplate template, MailValues properties) throws MessagingException {
         sendHtmlMessage(to, template.getSubject(), processProperties(template.getContent(), properties.getMap()));
     }
 

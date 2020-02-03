@@ -3,11 +3,11 @@ package com.can.app.swim.swimapp.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MailProperties {
+public class MailValues {
 
     private Map<String, String> map ;
 
-     public MailProperties(){
+     public MailValues(){
          map= new HashMap<>();
     }
 
