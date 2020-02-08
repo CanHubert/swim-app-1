@@ -23,7 +23,7 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
-        this.roles = user.getRoles().stream().map(role -> role.getName().getName()).collect(Collectors.toList());
+        this.roles = user.getRoles().stream().map(role -> role.getName().getName()).sorted().collect(Collectors.toList());
     }
 
 }

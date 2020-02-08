@@ -27,8 +27,6 @@ public class UserController {
     public List<UserDto> getUsersWithRoles(){
       return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
-
-
 }
 
 
