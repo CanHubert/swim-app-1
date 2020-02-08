@@ -128,7 +128,7 @@ public class AuthController {
 			message = "User can't be registered!";
 		}
 
-		return ResponseEntity.ok(message);
+		return ResponseEntity.ok(new MessageResponse(message));
 	}
 
 	private void sendWelcomeEmail(User user) throws MessagingException {
@@ -139,7 +139,6 @@ public class AuthController {
 			mailValues.add("user", user.getFullName());
 			emailService.sendHtmlVelocityMail(user.getEmail(), emailTemplate.get(), mailValues);
 		}
-
 	}
 
 	private void throwExceptionIfRoleIsNull(Role role) {

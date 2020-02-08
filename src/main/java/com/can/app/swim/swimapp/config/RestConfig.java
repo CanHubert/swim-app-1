@@ -28,11 +28,12 @@ public class RestConfig implements RepositoryRestConfigurer {
 
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
 
-        // disable HTTP methods for Product: PUT, POST and DELETE
-//        config.getExposureConfiguration()
-//                .forDomainType(User.class)
-//                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
-//                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+//         disable HTTP methods for Product: PUT, POST and DELETE
+//        for(Class c : getClasses())
+//        {
+//            disableHttpMethods(config, theUnsupportedActions, c);
+//        }
+
 
         // disable HTTP methods for ProductCategory: PUT, POST and DELETE
 //        config.getExposureConfiguration()
@@ -44,11 +45,23 @@ public class RestConfig implements RepositoryRestConfigurer {
         exposeIds(config);
     }
 
+    private void disableHttpMethods(RepositoryRestConfiguration config, HttpMethod[] theUnsupportedActions, Class<? extends EntityType<?>> c) {
+        config.getExposureConfiguration()
+                .forDomainType(c)
+                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+    }
+
     private void exposeIds(RepositoryRestConfiguration config) {
 
         // expose entity ids
         //
+        Class[] domainTypes = getClasses();
 
+        config.exposeIdsFor(domainTypes);
+    }
+
+    private Class<? extends  EntityType<?>>[] getClasses() {
         // - get a list of all entity classes from the entity manager
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
 
@@ -61,7 +74,6 @@ public class RestConfig implements RepositoryRestConfigurer {
         }
 
         // - expose the entity ids for the array of entity/domain types
-        Class[] domainTypes = entityClasses.toArray(new Class[0]);
-        config.exposeIdsFor(domainTypes);
+        return entityClasses.toArray(new Class[0]);
     }
 }

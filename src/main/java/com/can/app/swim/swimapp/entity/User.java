@@ -2,6 +2,9 @@ package com.can.app.swim.swimapp.entity;
 
 import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -11,6 +14,8 @@ import java.util.Collection;
 
 
 @Entity
+@Getter
+@Setter
 @Table(name="user",
 		uniqueConstraints = {
 		@UniqueConstraint(columnNames = "username"),
@@ -42,6 +47,7 @@ public class User{
 	@Column(name = "email")
 	private String email;
 
+	@JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -51,23 +57,27 @@ public class User{
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(name = "user_country",
+//                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//                inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"))
+//    private Collection<Country> countries;
+
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "countryId")
+//    private Country country;
+
     public User() {
     }
 
     public User(String username, String firstName, String lastName, String email, String password) {
-        this.username = username;
+        this(username, email, password);
     	this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.password = password;
     }
 
     public User(String username, String firstName, String lastName, String email, String password, Collection<Role> roles) {
-        this.username = username;
-    	this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
+        this(username,firstName,lastName,email,password);
         this.roles = roles;
     }
     
@@ -85,67 +95,6 @@ public class User{
         this.password = encoder.encode(signupRequest.getPassword());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-    public String getFullName(){
-        return firstName+" "+lastName;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -153,8 +102,12 @@ public class User{
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + "*********" + '\'' +
                 ", roles=" + roles +
                 '}';
+    }
+
+    @JsonIgnore
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

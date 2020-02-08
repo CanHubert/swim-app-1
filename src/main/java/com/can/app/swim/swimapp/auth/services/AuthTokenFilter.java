@@ -3,6 +3,7 @@ package com.can.app.swim.swimapp.auth.services;
 
 import com.can.app.swim.swimapp.auth.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +21,16 @@ import java.util.logging.Logger;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-	@Autowired
 	private JWTUtils jwtUtils;
 
-	@Autowired
 	private UserDetailsService userDetailsService;
+
+	@Autowired
+	public AuthTokenFilter(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JWTUtils jwtUtils){
+		this.jwtUtils = jwtUtils;
+		this.userDetailsService = userDetailsService;
+	}
+	public AuthTokenFilter(){};
 
 	private static final Logger logger = Logger.getLogger(JWTUtils.class.getName());
 
