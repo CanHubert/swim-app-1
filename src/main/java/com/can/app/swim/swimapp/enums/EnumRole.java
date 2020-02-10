@@ -3,10 +3,10 @@ package com.can.app.swim.swimapp.enums;
 import java.util.Arrays;
 
 public enum EnumRole {
-	ROLE_USER("user"),
-	ROLE_INSTRUCTOR("instructor"),
-	ROLE_MANAGER("manager"),
-	ROLE_ADMIN("admin");
+	USER("user"),
+	INSTRUCTOR("instructor"),
+	MANAGER("manager"),
+	ADMIN("admin");
 
 	final String name;
 

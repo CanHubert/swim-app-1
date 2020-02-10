@@ -99,7 +99,7 @@ public class AuthController {
 
 		if (CollectionUtils.isEmpty(strRoles))
 		{
-			Role userRole = roleRepository.findByName(EnumRole.ROLE_USER);
+			Role userRole = roleRepository.findByName(EnumRole.USER);
 			throwExceptionIfRoleIsNull(userRole);
 					
 			roles.add(userRole);

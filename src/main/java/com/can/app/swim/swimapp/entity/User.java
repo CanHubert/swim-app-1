@@ -57,11 +57,11 @@ public class User{
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_country",
-//                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-//                inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"))
-//    private Collection<Country> countries;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_country",
+                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"))
+    private Collection<Country> countries;
 
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "countryId")

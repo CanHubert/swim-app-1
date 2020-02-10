@@ -1,5 +1,6 @@
 package com.can.app.swim.swimapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class Country {
     public Country() {
     }
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_country",
                     joinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"),
