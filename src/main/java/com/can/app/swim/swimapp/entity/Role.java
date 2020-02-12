@@ -2,6 +2,7 @@ package com.can.app.swim.swimapp.entity;
 
 import com.can.app.swim.swimapp.enums.EnumRole;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,18 +30,14 @@ public class Role {
 
 
 
-    @JsonBackReference
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-                joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-                inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private Collection<User> users;
+//    @JsonIgnore
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(name = "users_roles",
+//                joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+//                inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+//    private Collection<User> users;
 
     public Role() {
-    }
-
-    public Role(EnumRole name) {
-        this.name = name;
     }
 
 }

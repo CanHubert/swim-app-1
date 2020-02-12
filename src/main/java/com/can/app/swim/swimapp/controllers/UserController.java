@@ -52,39 +52,6 @@ public class UserController {
         return u;
     }
 
-    @PutMapping("/users/{userId}/roles/{roleId}")
-    public ResponseEntity<?> addUserRole(@PathVariable("userId") long userId, @PathVariable("roleId") long roleId){
-        Optional<User> $user = userRepository.findById(userId);
-        User user = null;
-        if($user.isPresent())
-        {
-            Optional<Role> $role = roleRepository.findById(roleId);
-            if($role.isPresent())
-            {
-                user = $user.get();
-                Role role = $role.get();
-                if(user.getRoles().contains(role))
-                {
-                    return ResponseEntity.badRequest().body(new MessageResponse("User already have this role!"));
-                }
-                user.getRoles().add($role.get());
-                userRepository.save(user);
-            }
-            else
-            {
-               // throw new RuntimeException("no user with given id");
-                return ResponseEntity.badRequest().body(new MessageResponse(String.format("Role with id = %s doesn't exists!", roleId)));
-            }
-        }
-        else
-        {
-           // throw new RuntimeException("no user with given id");
-            return ResponseEntity.badRequest().body(new MessageResponse(String.format("User with id = %s doesn't exists!", userId)));
-        }
-
-        return ResponseEntity.ok(user);
-    }
-
     private User dtoToEntity(UserDto dto){
         User user = new User(dto);
         user.setRoles((dto.getRoles()));

@@ -1,6 +1,7 @@
 package com.can.app.swim.swimapp.auth.payloads.responses;
 
 import com.can.app.swim.swimapp.auth.services.UserDetailsImpl;
+import com.can.app.swim.swimapp.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +15,9 @@ public class JwtResponse {
 	private Long id;
 	private String username;
 	private String email;
-	private List<String> roles;
+	private List<Role> roles;
 
-	public JwtResponse(String accessToken, UserDetailsImpl userDetails, List<String> roles) {
+	public JwtResponse(String accessToken, UserDetailsImpl userDetails, List<Role> roles) {
 		this.token = accessToken;
 		this.id = userDetails.getId();
 		this.username = userDetails.getUsername();
