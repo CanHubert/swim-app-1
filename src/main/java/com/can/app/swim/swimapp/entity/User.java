@@ -1,6 +1,7 @@
 package com.can.app.swim.swimapp.entity;
 
 import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
+import com.can.app.swim.swimapp.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -47,7 +48,6 @@ public class User{
 	@Column(name = "email")
 	private String email;
 
-	@JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
@@ -86,6 +86,15 @@ public class User{
 		this.email = email;
 		this.password = password;
 	}
+
+	public User(UserDto dto){
+        this.id = dto.getId();
+        this.firstName = dto.getFirstName();
+        this.lastName = dto.getLastName();
+        this.username = dto.getUsername();
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
+    }
 
 	public User(SignupRequest signupRequest, PasswordEncoder encoder){
         this.username = signupRequest.getUsername();

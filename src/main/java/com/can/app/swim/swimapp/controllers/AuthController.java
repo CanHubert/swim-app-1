@@ -101,7 +101,6 @@ public class AuthController {
 		{
 			Role userRole = roleRepository.findByName(EnumRole.USER);
 			throwExceptionIfRoleIsNull(userRole);
-					
 			roles.add(userRole);
 		}
 		else 

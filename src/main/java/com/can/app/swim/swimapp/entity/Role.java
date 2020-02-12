@@ -4,6 +4,7 @@ import com.can.app.swim.swimapp.enums.EnumRole;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import java.util.Collection;
 @Table(name = "role")
 @Setter
 @Getter
+@ToString
 public class Role {
 
     @Id
@@ -21,6 +23,11 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EnumRole name;
+
+    @Column(name = "order")
+    private Integer order;
+
+
 
     @JsonBackReference
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -36,11 +43,4 @@ public class Role {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

@@ -1,8 +1,10 @@
 package com.can.app.swim.swimapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,6 +13,7 @@ import java.util.Collection;
 @Table(name="country")
 @Getter
 @Setter
+@ToString
 public class Country {
 
     @Id
@@ -30,11 +33,4 @@ public class Country {
                     inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Collection<User> users;
 
-    @Override
-    public String toString() {
-        return "Country{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
