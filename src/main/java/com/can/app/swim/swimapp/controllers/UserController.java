@@ -55,7 +55,7 @@ public class UserController {
     private User dtoToEntity(UserDto dto){
         User user = new User(dto);
         user.setRoles((dto.getRoles()));
-        user.setCountries(countryRepository.findByNameIn(dto.getCountries()));
+        user.setCountries(dto.getCountries());
         return user;
     }
 }

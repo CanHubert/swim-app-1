@@ -20,7 +20,7 @@ public class UserDto {
     private String email;
     private String password;
     private List<Role> roles;
-    private List<String> countries;
+    private List<Country> countries;
 
     public UserDto(){}
 
@@ -35,12 +35,6 @@ public class UserDto {
                 .stream()
                 .sorted(Comparator.comparing(Role::getOrder))
                 .collect(Collectors.toList());
-         this.countries = user.getCountries()
-                 .stream()
-                 .map(Country::getName)
-                 .sorted()
-                 .collect(Collectors.toList());
+         this.countries = (List<Country>) user.getCountries();
     }
-
-
 }

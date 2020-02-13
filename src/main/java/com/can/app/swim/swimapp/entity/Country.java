@@ -27,10 +27,12 @@ public class Country {
     }
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_country",
                     joinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"),
                     inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private Collection<User> users;
+
+
 
 }
