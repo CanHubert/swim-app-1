@@ -1,10 +1,14 @@
 package com.can.app.swim.swimapp.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "emailtemplate")
+@Data @NoArgsConstructor
 public class EmailTemplate {
 
     @Id
@@ -23,38 +27,4 @@ public class EmailTemplate {
     @Column(name = "content")
     private String content;
 
-    public EmailTemplate() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

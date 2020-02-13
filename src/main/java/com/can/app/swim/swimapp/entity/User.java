@@ -6,27 +6,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name="user",
 		uniqueConstraints = {
 		@UniqueConstraint(columnNames = "username"),
 		@UniqueConstraint(columnNames = "email")
 })
-public class User{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User extends UserBase{
 
     @NotBlank
     @Column(name = "username")
@@ -36,17 +36,13 @@ public class User{
     @Column(name = "password")
 	private String password;
 
-    @NotBlank
-	@Column(name = "first_name")
-	private String firstName;
-    
-    @NotBlank
-	@Column(name = "last_name")
-	private String lastName;
-
 	@Email
 	@Column(name = "email")
 	private String email;
+
+	@Nullable
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+	private List<Children> childrens;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -102,17 +98,6 @@ public class User{
         this.lastName = signupRequest.getLastName();
         this.email = signupRequest.getEmail();
         this.password = encoder.encode(signupRequest.getPassword());
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
     }
 
     @JsonIgnore

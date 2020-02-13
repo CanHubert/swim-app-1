@@ -1,12 +1,11 @@
 package com.can.app.swim.swimapp.dto;
 
-import com.can.app.swim.swimapp.entity.Country;
-import com.can.app.swim.swimapp.entity.Role;
-import com.can.app.swim.swimapp.entity.User;
+import com.can.app.swim.swimapp.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +18,10 @@ public class UserDto {
     private String lastName;
     private String email;
     private String password;
+    private Date dateOfBirth;
     private List<Role> roles;
     private List<Country> countries;
+    private List<Children> childrens;
 
     public UserDto(){}
 
@@ -29,6 +30,7 @@ public class UserDto {
         this.username = user.getUsername();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.dateOfBirth = user.getDateOfBirth();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.roles = user.getRoles()
@@ -36,5 +38,6 @@ public class UserDto {
                 .sorted(Comparator.comparing(Role::getOrder))
                 .collect(Collectors.toList());
          this.countries = (List<Country>) user.getCountries();
+         this.childrens = user.getChildrens();
     }
 }
