@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -42,6 +43,7 @@ public class User extends UserBase{
 
 	@Nullable
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    @BatchSize(size = 5)
 	private List<Children> childrens;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -51,12 +53,14 @@ public class User extends UserBase{
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
+    @BatchSize(size = 4)
     private Collection<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_country",
                 joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"))
+    @BatchSize(size = 2)
     private Collection<Country> countries;
 
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -98,6 +102,12 @@ public class User extends UserBase{
         this.lastName = signupRequest.getLastName();
         this.email = signupRequest.getEmail();
         this.password = encoder.encode(signupRequest.getPassword());
+    }
+
+    public User(String firstName, String lastName, String email, boolean test){
+        this.firstName = firstName;
+        this.lastName= lastName;
+        this.email= email;
     }
 
     @JsonIgnore

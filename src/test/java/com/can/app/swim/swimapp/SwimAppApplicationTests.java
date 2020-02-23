@@ -10,4 +10,12 @@ class SwimAppApplicationTests {
 	void contextLoads() {
 	}
 
+//	@Test @Autowired
+//	void testEmailSender(EmailTemplateRepository emailTemplateRepository, EmailService emailService){
+//		MailSender sender = new MailSender(emailTemplateRepository, emailService);
+//		User user = new User("Hubert", "Can", "canhubert@gmail.com", true);
+//		EmailReceiver receiver = new EmailReceiver(user);
+//		sender.sendEmail(EmailName.WELCOME, receiver);
+//	}
+
 }

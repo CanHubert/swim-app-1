@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.can.app.swim.swimapp.helpers.ExceptionsUtil.throwRuntimeException;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/childrens")
 public class ChildrenController {
@@ -24,7 +25,7 @@ public class ChildrenController {
         this.userRepository = userRepository;
     }
 
-    @PutMapping("/parent/{parentId}")
+    @PostMapping("/parent/{parentId}")
     public Children addChildren2(@RequestBody Children children,
                                  @PathVariable("parentId") Long parentId){
         User parent = userRepository.findById(parentId)

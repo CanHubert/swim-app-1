@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -18,5 +19,8 @@ public class Children extends UserBase{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
     protected User parent;
+
+    @Column(name = "amount")
+    private BigDecimal amount;
 
 }

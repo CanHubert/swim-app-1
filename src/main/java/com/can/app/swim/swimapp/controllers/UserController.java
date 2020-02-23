@@ -16,7 +16,7 @@ import static com.can.app.swim.swimapp.helpers.ExceptionsUtil.throwRuntimeExcept
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
     private UserRepository userRepository;
@@ -26,23 +26,27 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/users/details")
+    @GetMapping("/details")
     public List<UserDto> getUsersWithRoles(){
       return userRepository.findAll().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public UserDto getUserDto(@PathVariable("id") long id){
       return userRepository.findById(id).map(UserDto::new)
               .orElseThrow(throwRuntimeException(String.format("User with id = %s doesn't exists", id)));
     }
 
-    @PutMapping("/users")
+    @PutMapping
     public User updateUser(@RequestBody UserDto user){
-        User u = dtoToEntity(user);
-        userRepository.save(u);
-        return u;
+        return  userRepository.save(dtoToEntity(user));
     }
+
+    @GetMapping
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+
 
     private User dtoToEntity(UserDto dto){
         User user = new User(dto);

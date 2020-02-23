@@ -14,7 +14,7 @@ public enum EnumRole {
 		return Arrays.stream(EnumRole.values())
 				.filter(role -> role.name().equals(name.toUpperCase()))
 				.findFirst()
-				.orElseGet(null);
+				.orElseGet(null);//TODO poprawić nulla
 	}
 
 	public static List<EnumRole> getByNames(List<String> names){

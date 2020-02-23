@@ -1,10 +1,8 @@
 package com.can.app.swim.swimapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,7 +13,7 @@ import java.util.Date;
 @Setter
 @ToString
 @MappedSuperclass
-public class UserBase {
+abstract public class UserBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

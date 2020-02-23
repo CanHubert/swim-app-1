@@ -6,12 +6,12 @@ import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
 import com.can.app.swim.swimapp.auth.payloads.responses.JwtResponse;
 import com.can.app.swim.swimapp.auth.payloads.responses.MessageResponse;
 import com.can.app.swim.swimapp.auth.services.UserDetailsImpl;
-import com.can.app.swim.swimapp.entity.EmailTemplate;
 import com.can.app.swim.swimapp.entity.Role;
 import com.can.app.swim.swimapp.entity.User;
+import com.can.app.swim.swimapp.enums.EmailName;
 import com.can.app.swim.swimapp.enums.EnumRole;
-import com.can.app.swim.swimapp.helpers.MailValues;
-import com.can.app.swim.swimapp.repository.EmailTemplateRepository;
+import com.can.app.swim.swimapp.helpers.email.EmailReceiver;
+import com.can.app.swim.swimapp.helpers.email.IEmailSender;
 import com.can.app.swim.swimapp.repository.RoleRepository;
 import com.can.app.swim.swimapp.repository.UserRepository;
 import com.can.app.swim.swimapp.services.EmailService;
@@ -26,11 +26,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,9 +46,6 @@ public class AuthController {
 	private RoleRepository roleRepository;
 
 	@Autowired
-	private EmailTemplateRepository emailTemplateRepository;
-
-	@Autowired
 	private PasswordEncoder encoder;
 
 	@Autowired
@@ -58,6 +53,9 @@ public class AuthController {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private IEmailSender iEmailSender;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -73,7 +71,7 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
-		
+
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails, roleRepository.findByNameIn(EnumRole.getByNames(roles))));
 	}
 
@@ -118,7 +116,8 @@ public class AuthController {
 		String message;
 		try
 		{
-			sendWelcomeEmail(user);
+			iEmailSender.sendEmail(EmailName.WELCOME, new EmailReceiver(user));
+
 			userRepository.save(user);
 			message = "User registered successfully!";
 		}
@@ -128,16 +127,6 @@ public class AuthController {
 		}
 
 		return ResponseEntity.ok(new MessageResponse(message));
-	}
-
-	private void sendWelcomeEmail(User user) throws MessagingException {
-		Optional<EmailTemplate> emailTemplate = emailTemplateRepository.findByName("Register");
-		if(emailTemplate.isPresent())
-		{
-			MailValues mailValues = new MailValues();
-			mailValues.add("user", user.getFullName());
-			emailService.sendHtmlVelocityMail(user.getEmail(), emailTemplate.get(), mailValues);
-		}
 	}
 
 	private void throwExceptionIfRoleIsNull(Role role) {

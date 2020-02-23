@@ -1,7 +1,7 @@
 package com.can.app.swim.swimapp.services;
 
 import com.can.app.swim.swimapp.entity.EmailTemplate;
-import com.can.app.swim.swimapp.helpers.MailValues;
+import com.can.app.swim.swimapp.helpers.email.MailValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,9 +16,11 @@ import java.util.Map;
 @Component
 public class EmailServiceImpl implements EmailService {
 
-    @Qualifier("getJavaMailSender")
-    @Autowired
     private JavaMailSender javaMailSender;
+
+    public EmailServiceImpl(@Qualifier("getJavaMailSender") JavaMailSender javaMailSender){
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void sendSimpleMessage(String to, String subject, String content){

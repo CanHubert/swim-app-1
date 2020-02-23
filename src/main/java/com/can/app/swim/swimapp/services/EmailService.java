@@ -1,7 +1,7 @@
 package com.can.app.swim.swimapp.services;
 
 import com.can.app.swim.swimapp.entity.EmailTemplate;
-import com.can.app.swim.swimapp.helpers.MailValues;
+import com.can.app.swim.swimapp.helpers.email.MailValues;
 
 import javax.mail.MessagingException;
 
