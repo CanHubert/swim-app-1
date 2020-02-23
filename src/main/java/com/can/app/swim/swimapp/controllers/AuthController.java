@@ -1,6 +1,5 @@
 package com.can.app.swim.swimapp.controllers;
 
-import com.can.app.swim.swimapp.auth.jwt.JWTUtils;
 import com.can.app.swim.swimapp.auth.payloads.requests.LoginRequest;
 import com.can.app.swim.swimapp.auth.payloads.requests.SignupRequest;
 import com.can.app.swim.swimapp.auth.payloads.responses.JwtResponse;
@@ -13,19 +12,12 @@ import com.can.app.swim.swimapp.enums.EnumRole;
 import com.can.app.swim.swimapp.facades.AuthFacade;
 import com.can.app.swim.swimapp.helpers.ExceptionsUtil;
 import com.can.app.swim.swimapp.helpers.email.EmailReceiver;
-import com.can.app.swim.swimapp.helpers.email.IEmailSender;
-import com.can.app.swim.swimapp.repository.RoleRepository;
-import com.can.app.swim.swimapp.repository.UserRepository;
-import com.can.app.swim.swimapp.services.EmailService;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
