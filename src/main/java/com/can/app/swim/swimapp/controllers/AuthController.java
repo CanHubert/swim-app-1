@@ -10,6 +10,8 @@ import com.can.app.swim.swimapp.entity.Role;
 import com.can.app.swim.swimapp.entity.User;
 import com.can.app.swim.swimapp.enums.EmailName;
 import com.can.app.swim.swimapp.enums.EnumRole;
+import com.can.app.swim.swimapp.facades.AuthFacade;
+import com.can.app.swim.swimapp.helpers.ExceptionsUtil;
 import com.can.app.swim.swimapp.helpers.email.EmailReceiver;
 import com.can.app.swim.swimapp.helpers.email.IEmailSender;
 import com.can.app.swim.swimapp.repository.RoleRepository;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,77 +39,63 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	@Autowired
-	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UserRepository userRepository;
+	private AuthFacade authFacade;
 
-	@Autowired
-	private RoleRepository roleRepository;
-
-	@Autowired
-	private PasswordEncoder encoder;
-
-	@Autowired
-	private JWTUtils jwtUtils;
-
-	@Autowired
-	private EmailService emailService;
-
-	@Autowired
-	private IEmailSender iEmailSender;
+	public AuthController(AuthFacade authFacade){
+		this.authFacade = authFacade;
+	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		Authentication authentication =
+				authFacade.authenticate(
+						new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-
+		String jwt = authFacade.generateJwtToken(authentication);
 
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userDetails, roleRepository.findByNameIn(EnumRole.getByNames(roles))));
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails, authFacade.findRolesByNameIn(EnumRole.getByNames(roles))));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+		if (authFacade.isUserExistsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Username is already taken!"));
 		}
 
-		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+		if (authFacade.isUserExistsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest,encoder);
+		User user = new User(signUpRequest,authFacade.getEncoder());
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
 		if (CollectionUtils.isEmpty(strRoles))
 		{
-			Role userRole = roleRepository.findByName(EnumRole.USER);
-			throwExceptionIfRoleIsNull(userRole);
-			roles.add(userRole);
+			Optional<Role> $role = authFacade.findRoleByName(EnumRole.USER);
+			Role role = getRole($role);
+			roles.add(role);
 		}
 		else 
 		{
 			strRoles.forEach(roleName ->
 			{
-				Role role = roleRepository.findByName(EnumRole.getByName(roleName));
-				throwExceptionIfRoleIsNull(role);
+				Optional<Role> $role = authFacade.findRoleByName(EnumRole.getByName(roleName));
+				Role role = getRole($role);
 				roles.add(role);
 			});
 		}
@@ -116,9 +105,9 @@ public class AuthController {
 		String message;
 		try
 		{
-			iEmailSender.sendEmail(EmailName.WELCOME, new EmailReceiver(user));
+			authFacade.sendEmail(EmailName.WELCOME, new EmailReceiver(user));
 
-			userRepository.save(user);
+			authFacade.saveUser(user);
 			message = "User registered successfully!";
 		}
 		catch (Exception ignored)
@@ -129,11 +118,7 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse(message));
 	}
 
-	private void throwExceptionIfRoleIsNull(Role role) {
-		if(role == null)
-		{
-			throw new RuntimeException("Error: Role is not found.");
-		}
+	private Role getRole(Optional<Role> $role) {
+		return $role.orElseThrow(ExceptionsUtil.throwRuntimeException("Error: Role is not found."));
 	}
-
 }
