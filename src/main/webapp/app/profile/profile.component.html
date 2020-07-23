@@ -1,0 +1,72 @@
+<div class="m-4">
+    <table class="table-bordered col-lg-4 col-md-4" *ngIf="isLoaded">
+        <tr>
+            <th>Id</th>
+            <td>{{user.id}}</td>
+        </tr>
+        <tr>
+            <th>Username</th>
+            <td>{{user.username}}</td>
+        </tr>
+        <tr>
+            <th>First name</th>
+            <td>{{user.firstName}}</td>
+        </tr>
+        <tr>
+            <th>Last name</th>
+            <td>{{user.lastName}}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>{{UserHelper.showRoles(user)}}</td>
+        </tr>
+        <tr>
+            <th>Countries</th>
+            <td>{{UserHelper.showCountries(user)}}</td>
+        </tr>
+    </table>
+
+    <mat-accordion *ngIf="isEdit" >
+        <mat-expansion-panel class="col-md-4 col-lg-4 p-0 my-3">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Edit user
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <p>
+                <button mat-raised-button class="btn-lg" id="promote_button" (click)="promote()"
+                        [disabled]="!canPromote">{{getPromoteLabel()}}
+                </button>
+            </p>
+            <p>
+                <button mat-raised-button color="warn" class="btn-lg" id="demote_button" (click)="demote()"
+                        [disabled]="!canDemote">Demote
+                </button>
+            </p>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Countries</mat-label>
+                    <mat-select [formControl]="countries" multiple>
+                        <mat-option *ngFor="let country of countriesList" [value]="country">
+                            {{country.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" class="btn-lg" style="margin-left: 1rem"
+                        (click)="saveCountries()">Save
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <p>
+        <button mat-raised-button color="primary" class="btn-lg" (click)="goToAdmin()">Back to users</button>
+    </p>
+</div>

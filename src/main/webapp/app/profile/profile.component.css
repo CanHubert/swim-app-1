@@ -1,0 +1,18 @@
+table > tr > th{
+    background-color: #13407c;
+    color: aliceblue;
+    padding: 1rem;
+}
+
+table > tr > td {
+    background-color: #207d9c;
+    padding: 1rem;
+    color: white;
+    width: 70%;
+}
+
+#promote_button{
+    background-color: #13407c;
+    color: white;
+}
+

@@ -1,6 +1,7 @@
 package com.can.app.swim.swimapp.auth.services;
 
 import com.can.app.swim.swimapp.entity.User;
+import com.can.app.swim.swimapp.helpers.ExceptionsUtil;
 import com.can.app.swim.swimapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,14 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> user$ = userRepository.findByUsername(username);
-		if(user$.isPresent())
-		{
-			return UserDetailsImpl.build(user$.get());
-		}
-		else
-		{
-			throw new UsernameNotFoundException("User Not Found with username: " + username);
-		}
+		return UserDetailsImpl.build(userRepository.findByUsername(username)
+				.orElseThrow(ExceptionsUtil.usernameNotFoundException("User Not Found with username: " + username)));
 	}
 }

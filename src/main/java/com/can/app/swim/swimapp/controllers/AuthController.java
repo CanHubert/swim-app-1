@@ -13,6 +13,8 @@ import com.can.app.swim.swimapp.facades.AuthFacade;
 import com.can.app.swim.swimapp.helpers.ExceptionsUtil;
 import com.can.app.swim.swimapp.helpers.email.EmailReceiver;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin( origins =  "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -97,7 +99,7 @@ public class AuthController {
 		String message;
 		try
 		{
-			authFacade.sendEmail(EmailName.WELCOME, new EmailReceiver(user));
+			//authFacade.sendEmail(EmailName.WELCOME, new EmailReceiver(user));
 
 			authFacade.saveUser(user);
 			message = "User registered successfully!";

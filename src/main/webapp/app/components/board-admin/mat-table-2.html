@@ -1,0 +1,25 @@
+<div class="m-5">
+    <div class="mat-elevation-z8 example-container">
+        <table mat-table [dataSource]="dataSource"  matSort multiTemplateDataRows>
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+                <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="link" *ngFor="let user of displayedColumns">
+                <th mat-header-cell *matHeaderCellDef> Profile</th>
+                <td mat-cell *matCellDef="let user"><a href="/user/{{user.id}}/details">Details</a> </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+        </table>
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

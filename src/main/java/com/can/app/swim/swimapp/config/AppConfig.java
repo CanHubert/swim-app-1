@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:auth.properties")
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer {
 
     @Value("${spring.mail.password}")
     private String password;
@@ -35,5 +37,16 @@ public class AppConfig {
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         return mailSender;
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+        corsRegistry.addMapping("/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("*")
+                .maxAge(3600L)
+                .allowedHeaders("*")
+                .exposedHeaders("Authorization")
+                .allowCredentials(true);
     }
 }

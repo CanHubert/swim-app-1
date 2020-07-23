@@ -1,0 +1,20 @@
+
+<div class="login-page-wrapper">
+    <div class="login-wrapper shadow-lg p-3 mb-5 bg-white rounded">
+        <form class="form-horizontal" [formGroup] = "form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="name" formControlName="name">
+            </div>
+            <div>
+                <input type="password" class="form-control" placeholder="password" formControlName="password">
+            </div>
+            <div>
+                <input type="submit" value="Login" class="btn btn-primary">
+            </div>
+        </form>
+        <div>
+            <a routerLink="/register"> U dont have account? Register!</a>
+        </div>
+    </div>
+</div>
+

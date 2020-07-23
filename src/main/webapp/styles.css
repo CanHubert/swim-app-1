@@ -1,0 +1,105 @@
+:root{
+    /*colors section*/
+    --top-bar-color: rgb(38, 135, 214);
+    --top-link-color: rgb(23, 110, 192);
+    --top-link-hover-color: rgb(17, 60, 202);
+    --top-link-click-color: rgb(14, 49, 164);
+}
+
+.header{
+    width:100%;
+    display:flex;
+    position:sticky;
+    max-height: 10em;
+    top:0;
+}
+
+.header-title{
+    width:30%;
+    background-color:var(--top-bar-color);
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    display:flex;
+}
+
+.img-wrap {
+  width: 200px;
+  height: 150px;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  margin: 0;
+}
+
+.header-title img{
+   padding: 0.5em;
+   width: 7em;
+}
+
+.header-title i{
+    width: 100%;
+    transform:scaleX(-1);
+    font-size: 6em;
+    text-align: center;
+    margin:auto;
+    color: rgb(41, 19, 138);
+}
+
+.header-user i{
+    font-size: 3em;
+}
+
+.title{
+   margin:auto;
+}
+
+a:hover{
+   color: var(--top-link-hover-color) !important;
+}
+
+a:active{
+   color: var(--top-link-click-color) !important;
+}
+
+.nav .list-inline li a {
+   background-color: var(--top-bar-color) !important;
+   border: none !important;
+}
+
+.nav{
+   width: 65%;
+   background-color:var(--top-bar-color);
+   padding: 1em ;
+   justify-content: center;
+}
+
+.header-user{
+    background-color:var(--top-bar-color);
+    width:15%;
+}
+
+.nav .list-inline li {
+   display: inline-block;
+   width: auto;
+   list-style: outside none none;
+}
+
+.nav .list-inline li a {
+    display:inline-block;
+    color: white;
+    margin: 0 0.25em;
+    font-weight: bold;
+    font-size:1.5em;
+}
+
+.page-content{
+    width:100%;
+    height: 100%;
+}
+
+footer{
+    background-color : black;
+    color: white;
+    width:100%;
+}

@@ -1,0 +1,22 @@
+
+.login-page-wrapper{
+    padding: 4em 0;
+    background-color: lightblue;
+    height: inherit;
+}
+
+.login-wrapper{
+    justify-content: center;
+    width: 30%;
+    min-width: 20%;
+    margin: 0 auto !important;
+}
+
+.login-wrapper form{
+    margin: 2em auto;
+    padding: 1em;
+}
+
+.login-wrapper form div{
+    padding: 0.5em;
+}
